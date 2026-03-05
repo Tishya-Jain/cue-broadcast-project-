@@ -10,6 +10,7 @@ export interface Campaign {
   lastModified: string;
   nextScheduled?: string; // Date string for sidebar display
   nextScheduledTemplate?: string; // Name of the template scheduled
+  linkedReportName?: string; // Name of the linked Salesforce report
   previewTitle?: string;
   previewBody?: string;
   stats?: {

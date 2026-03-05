@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import Sidebar from './components/Sidebar';
-import { MainPanel } from './components/MainPanel';
+import Sidebar from './modules/broadcast/components/Sidebar';
+import { MainPanel } from './modules/broadcast/components/MainPanel';
 import { ChatPanel } from './components/ChatPanel';
 import { HistoryPanel } from './components/history/HistoryPanel';
 import { TestPage } from './components/TestPage'; // Imported TestPage
@@ -9,13 +9,14 @@ import { NavigationRail } from './components/NavigationRail';
 import { InboxSidebar } from './components/InboxSidebar'; // Import InboxSidebar
 import { TopNavigation } from './components/TopNavigation';
 import { TopNavBar } from './components/TopNavBar'; // New Top Nav
-import CreateCampaignModal from './components/CreateCampaignModal';
+import CreateCampaignModal from './modules/broadcast/components/CreateCampaignModal';
 import { CreateChatModal } from './components/CreateChatModal';
 import { CallModal } from './components/CallModal'; // Import CallModal
 import { GlobalTrace } from './components/GlobalTrace'; // Import GlobalTrace
-import { MOCK_CAMPAIGNS, MOCK_CHATS, MOCK_CUSTOMER_PROFILES } from './constants';
+import { MOCK_CHATS, MOCK_CUSTOMER_PROFILES } from './constants';
 import { Campaign, ChatSession } from './types';
 import { cn } from './components/ui/base';
+import { handleLaunchCampaign, handleCampaignUpdate } from './modules/broadcast/logic/broadcastLogic';
 
 const App: React.FC = () => {
   const [appMode, setAppMode] = useState<'broadcast' | 'chat' | 'history' | 'test' | 'reports'>('broadcast'); 
@@ -25,10 +26,26 @@ const App: React.FC = () => {
   const [isInboxSidebarOpen, setIsInboxSidebarOpen] = useState(true);
 
   // Broadcast State
-  const [campaigns, setCampaigns] = useState<Campaign[]>(MOCK_CAMPAIGNS);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   // Default to null (Intelligence Stack view)
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
   const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
+
+  // Fetch campaigns on mount
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        const response = await fetch('/api/campaigns');
+        if (response.ok) {
+          const data = await response.json();
+          setCampaigns(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch campaigns:', error);
+      }
+    };
+    fetchCampaigns();
+  }, []);
 
   // Chat State
   const [chats, setChats] = useState<ChatSession[]>(MOCK_CHATS);
@@ -73,15 +90,12 @@ const App: React.FC = () => {
       return true;
   };
 
-  const handleLaunchCampaign = (newCampaign: Campaign) => {
-      setCampaigns(prev => [newCampaign, ...prev]);
-      setSelectedCampaignId(newCampaign.id);
-      setIsCampaignModalOpen(false);
-      setIsMobileMenuOpen(false);
+  const onLaunchCampaign = async (formData: any) => {
+      await handleLaunchCampaign(formData, setCampaigns, setSelectedCampaignId, setIsCampaignModalOpen, setIsMobileMenuOpen);
   };
 
-  const handleCampaignUpdate = (updatedCampaign: Campaign) => {
-      setCampaigns(prev => prev.map(c => c.id === updatedCampaign.id ? updatedCampaign : c));
+  const onCampaignUpdate = (updatedCampaign: Campaign) => {
+      handleCampaignUpdate(updatedCampaign, setCampaigns);
   };
 
   const handleModeChange = (mode: 'broadcast' | 'chat' | 'history' | 'test' | 'reports') => {
@@ -398,7 +412,7 @@ const App: React.FC = () => {
                         className="h-full w-full"
                         isDarkMode={isDarkMode}
                         onToggleTheme={toggleTheme}
-                        onCampaignUpdate={handleCampaignUpdate}
+                        onCampaignUpdate={onCampaignUpdate}
                    />
                ) : appMode === 'broadcast' ? (
                    <MainPanel 
@@ -407,7 +421,7 @@ const App: React.FC = () => {
                         className="h-full w-full"
                         isDarkMode={isDarkMode}
                         onToggleTheme={toggleTheme}
-                        onCampaignUpdate={handleCampaignUpdate}
+                        onCampaignUpdate={onCampaignUpdate}
                    />
                ) : appMode === 'chat' ? (
                    <ChatPanel 
@@ -432,7 +446,7 @@ const App: React.FC = () => {
       <CreateCampaignModal 
         isOpen={isCampaignModalOpen} 
         onClose={() => setIsCampaignModalOpen(false)} 
-        onLaunch={handleLaunchCampaign}
+        onLaunch={onLaunchCampaign}
       />
       
       <CreateChatModal 

@@ -1,67 +1,5 @@
 
-import { Campaign, Member, SalesforceReport, ChatSession, ChatMessage, CustomerProfile, HistoryLog } from './types';
-
-export const MOCK_CAMPAIGNS: Campaign[] = [
-  {
-    id: '1',
-    name: 'Mumbai customers',
-    description: 'Diwali promotional campaign for Mumbai region',
-    listType: 'dynamic',
-    membersCount: 8123, // Kept for internal logic if needed, but hidden from sidebar
-    wabaCount: 3,
-    status: 'sent',
-    lastModified: '2 mins ago',
-    previewTitle: 'Our Diwali sale is live!!',
-    previewBody: 'Get flat 50% OFF on TV, Fridges and more!',
-    stats: {
-      sent: 11000,
-      delivered: 10500,
-      read: 9800,
-      failed: 500,
-      replied: 1200,
-    }
-  },
-  {
-    id: '2',
-    name: 'Ahmedabad customers',
-    description: 'Weekly engagement for Ahmedabad base',
-    listType: 'dynamic',
-    membersCount: 2213,
-    wabaCount: 1,
-    status: 'scheduled',
-    lastModified: '1 hour ago',
-    nextScheduled: 'Tomorrow, 10:00 AM',
-    nextScheduledTemplate: 'Weekly Digest V2'
-  },
-  {
-    id: '3',
-    name: 'Delhi leads - Q3',
-    listType: 'static',
-    membersCount: 1212,
-    wabaCount: 2,
-    status: 'sent',
-    lastModified: 'Yesterday',
-    previewTitle: 'Our Diwali sale is live!!',
-    previewBody: 'Get flat 50% OFF on TV, Fridges and more!',
-    stats: {
-      sent: 1212,
-      delivered: 1180,
-      read: 950,
-      opened: 980,
-      replied: 120,
-      failed: 32,
-    }
-  },
-  {
-    id: '4',
-    name: 'Pune renewal pending',
-    listType: 'static',
-    membersCount: 1234,
-    wabaCount: 1,
-    status: 'sent',
-    lastModified: '2 days ago',
-  }
-];
+import { Member, ChatSession, ChatMessage, CustomerProfile, HistoryLog } from './types';
 
 export const MOCK_MEMBERS: Member[] = [
   { id: '1', name: 'Neil Shah', phone: '+91 9876543210', status: 'read', avatarColor: 'bg-purple-200 text-purple-700' },
@@ -72,19 +10,6 @@ export const MOCK_MEMBERS: Member[] = [
   { id: '6', name: 'Virat Kohli', phone: '+91 9876543210', status: 'read', avatarColor: 'bg-orange-200 text-orange-700' },
   { id: '7', name: 'Rohit Sharma', phone: '+91 9876543210', status: 'delivered', avatarColor: 'bg-teal-200 text-teal-700' },
   { id: '8', name: 'KL Rahul', phone: '+91 9876543210', status: 'failed', avatarColor: 'bg-pink-200 text-pink-700' },
-];
-
-export const MOCK_SF_REPORTS: SalesforceReport[] = [
-  { id: 'r1', name: 'All Open Opportunities - Q4', folder: 'Sales Reports', lastRun: 'Today', recordCount: 450 },
-  { id: 'r2', name: 'New Leads (Last 30 Days)', folder: 'Marketing Reports', lastRun: 'Yesterday', recordCount: 1200 },
-  { id: 'r3', name: 'Churned Customers 2024', folder: 'Support Reports', lastRun: 'Last Week', recordCount: 85 },
-  { id: 'r4', name: 'High Value Loan Applicants', folder: 'Sales Reports', lastRun: 'Today', recordCount: 320 },
-];
-
-export const WIZARD_STEPS_LABELS = [
-  'Campaign Details',
-  'Data Source',
-  'Audience Mapping',
 ];
 
 export const MOCK_CHATS: ChatSession[] = [
